@@ -299,11 +299,33 @@ new Vue({
     submitOrder() {
       if (!this.canCheckout) return;
 
-      this.orderMessage = 'order submitted successfully';
+      const order = {
+        name: this.customer.name,
+        phone: this.customer.phone,
+        lessons: this.cart.map(i => i._id)
+      };
 
-      this.cart = [];
-      this.customer.name = '';
-      this.customer.phone = '';
+      fetch('https://YOUR-BACKEND-URL/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order)
+      }).then(() => {
+        this.cart.forEach(item => {
+          const lesson = this.lessons.find(l => l._id === item._id);
+          if (lesson) {
+            fetch(`https://YOUR-BACKEND-URL/lesson/${lesson._id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ space: lesson.space })
+            });
+          }
+        });
+
+        this.orderMessage = 'order submitted successfully';
+        this.cart = [];
+        this.customer.name = '';
+        this.customer.phone = '';
+      });
 
     }
   }
