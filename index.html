@@ -43,20 +43,23 @@
         <div class="sort">
           <label for="sortBy">Sort</label>
           <select id="sortBy" v-model="sortBy">
-            <option>Subject</option>
-            <option>Location</option>
-            <option>Price</option>
-            <option>Spaces</option>
+            <option value="topic">Subject</option>
+            <option value="location">Location</option>
+            <option value="price">Price</option>
+            <option value="space">Spaces</option>
           </select>
           <button class="order-toggle" @click="sortDir = sortDir === 'asc' ? 'desc' : 'asc'">
             <span class="arrow">{{ sortDir === 'asc' ? '↑' : '↓' }}</span>
             <span class="text">{{ sortDir }}</span>
           </button>
         </div>
+        <button class="order-toggle" @click="toggleCart" :disabled="cart.length === 0 && !showCart">
+          {{ showCart ? 'Back to lessons' : ('Cart (' + cart.length + ')') }}
+        </button>
       </section>
 
-      <ul class="lessons">
-        <li class="lesson" v-for="lesson in sortedLessons" :key="lesson.topic">
+      <ul class="lessons" v-if="!showCart">
+        <li class="lesson" v-for="lesson in sortedLessons" :key="lesson._id">
           <div class="lesson-left">
             <div>
               <div class="title">Subject: {{ lesson.topic }}</div>
@@ -66,17 +69,17 @@
             </div>
           </div>
           <div class="lesson-right">
-            <button :disabled="lesson.space <= 0">Add to cart</button>
+            <button :disabled="lesson.space <= 0" @click="addToCart(lesson)">Add to cart</button>
           </div>
         </li>
       </ul>
 
-      <aside class="cart-panel">
+      <aside class="cart-panel" v-else>
         <h2>Shopping cart</h2>
         <ul>
-          <li class="cart-item" v-for="item in cart" :key="item.topic + item.price">
+          <li class="cart-item" v-for="(item, index) in cart" :key="item.instanceId">
             <span>{{ item.topic }}</span>
-            <button>remove</button>
+            <button @click="removeFromCart(index)">remove</button>
           </li>
         </ul>
 
@@ -101,15 +104,13 @@
       searchText: '',
       sortBy: 'topic',
       sortDir: 'asc',
+      showCart: false,
       lessons: [
-        { topic: 'Basketball Training', location: 'Dubai', price: 120, space: 8 },
-        { topic: 'Robotics Club', location: 'Dubai', price: 140, space: 7 },
-        { topic: 'Coding Club', location: 'Sharjah', price: 115, space: 8 }
+        { _id: '1', topic: 'Basketball Training', location: 'Dubai', price: 120, space: 8 },
+        { _id: '2', topic: 'Robotics Club', location: 'Dubai', price: 140, space: 7 },
+        { _id: '3', topic: 'Coding Club', location: 'Sharjah', price: 115, space: 8 }
       ],
-      cart: [
-        { topic: 'Basketball Training', price: 120 },
-        { topic: 'Robotics Club', price: 140 }
-      ],
+      cart: [],
       customer: {
         name: '',
         phone: ''
@@ -142,6 +143,32 @@
           if (av > bv) return 1 * dir;
           return 0;
         });
+      }
+    },
+    methods: {
+      toggleCart() {
+        this.showCart = !this.showCart;
+      },
+      addToCart(lesson) {
+        if (!lesson || lesson.space <= 0) return;
+        const instanceId = Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+        this.cart.push({
+          instanceId,
+          _id: lesson._id,
+          topic: lesson.topic,
+          price: lesson.price
+        });
+        lesson.space = Math.max(0, lesson.space - 1);
+      },
+      removeFromCart(index) {
+        const item = this.cart[index];
+        if (!item) return;
+        const lesson = this.lessons.find(l => l._id === item._id);
+        if (lesson) lesson.space = Number(lesson.space) + 1;
+        this.cart.splice(index, 1);
+        if (this.cart.length === 0 && this.showCart) {
+          this.showCart = false;
+        }
       }
     }
   });
