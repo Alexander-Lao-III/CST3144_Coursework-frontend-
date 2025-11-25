@@ -28,6 +28,9 @@
     .checkout-form { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
     .checkout-form input { padding: 10px; border: 1px solid #cbd2e0; border-radius: 6px; }
     .checkout-form button { padding: 10px; border-radius: 8px; border: none; background: #2e7d32; color: #fff; cursor: pointer; }
+    .checkout-form button:disabled { background: #c3c7d1; cursor: not-allowed; }
+    .field-error { color: #b00020; font-size: 12px; margin-top: 4px; }
+    .info { padding: 8px; background: #e8f4ff; border-radius: 4px; margin-top: 8px; }
     footer { margin-top: 24px; text-align: center; color: #666; font-size: 14px; }
   </style>
 </head>
@@ -39,7 +42,7 @@
 
     <main>
       <section class="controls">
-        <input type="text" v-model="searchText" placeholder="Search lessons">
+        <input type="text" v-model="searchText" @input="onSearchInput" placeholder="Search lessons">
         <div class="sort">
           <label for="sortBy">Sort</label>
           <select id="sortBy" v-model="sortBy">
@@ -83,11 +86,18 @@
           </li>
         </ul>
 
-        <form class="checkout-form">
-          <input type="text" v-model="customer.name" placeholder="Name">
-          <input type="tel" v-model="customer.phone" placeholder="Phone">
-          <button type="button">checkout</button>
+        <form class="checkout-form" @submit.prevent="submitOrder">
+          <div>
+            <input type="text" v-model.trim="customer.name" placeholder="Name" autocomplete="name">
+            <div v-if="nameError" class="field-error">{{ nameError }}</div>
+          </div>
+          <div>
+            <input type="tel" v-model.trim="customer.phone" placeholder="Phone" autocomplete="tel">
+            <div v-if="phoneError" class="field-error">{{ phoneError }}</div>
+          </div>
+          <button type="submit" :disabled="!canCheckout">checkout</button>
         </form>
+        <div v-if="orderMessage" class="info">{{ orderMessage }}</div>
       </aside>
     </main>
 
@@ -105,6 +115,7 @@
       sortBy: 'topic',
       sortDir: 'asc',
       showCart: false,
+      orderMessage: '',
       lessons: [
         { _id: '1', topic: 'Basketball Training', location: 'Dubai', price: 120, space: 8 },
         { _id: '2', topic: 'Robotics Club', location: 'Dubai', price: 140, space: 7 },
@@ -143,11 +154,30 @@
           if (av > bv) return 1 * dir;
           return 0;
         });
+      },
+      nameError() {
+        if (!this.customer.name) return '';
+        return /^[A-Za-z ]+$/.test(this.customer.name) ? '' : 'letters only';
+      },
+      phoneError() {
+        if (!this.customer.phone) return '';
+        return /^[0-9]+$/.test(this.customer.phone) ? '' : 'numbers only';
+      },
+      canCheckout() {
+        return this.customer.name &&
+               this.customer.phone &&
+               !this.nameError &&
+               !this.phoneError &&
+               this.cart.length > 0;
       }
     },
     methods: {
+      onSearchInput() {
+        this.orderMessage = '';
+      },
       toggleCart() {
         this.showCart = !this.showCart;
+        this.orderMessage = '';
       },
       addToCart(lesson) {
         if (!lesson || lesson.space <= 0) return;
@@ -159,6 +189,7 @@
           price: lesson.price
         });
         lesson.space = Math.max(0, lesson.space - 1);
+        this.orderMessage = '';
       },
       removeFromCart(index) {
         const item = this.cart[index];
@@ -169,6 +200,14 @@
         if (this.cart.length === 0 && this.showCart) {
           this.showCart = false;
         }
+        this.orderMessage = '';
+      },
+      submitOrder() {
+        if (!this.canCheckout) return;
+        this.orderMessage = 'order submitted successfully';
+        this.cart = [];
+        this.customer.name = '';
+        this.customer.phone = '';
       }
     }
   });
