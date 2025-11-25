@@ -9,6 +9,11 @@
     body { margin: 0; background: #f6f7fb; color: #111; }
     .container { max-width: 900px; margin: 24px auto; padding: 16px; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
     header h1 { margin: 0 0 12px; font-size: 24px; }
+    .controls { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; }
+    .controls input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+    .sort { display: flex; gap: 8px; align-items: center; background: #f4f6fb; border: 1px solid #e0e5f2; padding: 8px 10px; border-radius: 10px; }
+    .sort select { padding: 6px 8px; border: 1px solid #cbd2e0; border-radius: 8px; background: #fff; }
+    .order-toggle { display: inline-flex; gap: 6px; align-items: center; padding: 6px 10px; border: none; border-radius: 8px; background: #1e88e5; color: #fff; cursor: pointer; }
     .lessons { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
     .lesson { display: flex; justify-content: space-between; gap: 12px; border: 1px solid #e6e8f0; border-radius: 10px; padding: 12px; background: #fafbff; }
     .lesson .title { font-weight: 600; margin-bottom: 4px; }
@@ -25,6 +30,23 @@
     </header>
 
     <main>
+      <section class="controls">
+        <input type="text" placeholder="Search lessons">
+        <div class="sort">
+          <label for="sortBy">Sort</label>
+          <select id="sortBy">
+            <option>Subject</option>
+            <option>Location</option>
+            <option>Price</option>
+            <option>Spaces</option>
+          </select>
+          <button class="order-toggle">
+            <span class="arrow">↑</span>
+            <span class="text">asc</span>
+          </button>
+        </div>
+      </section>
+
       <ul class="lessons">
         <li class="lesson">
           <div class="lesson-left">
