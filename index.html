@@ -109,5 +109,30 @@
       <small>&copy; 2024 Extra-Curricular Activities</small>
     </footer>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.min.js"></script>
+  <script>
+  new Vue({
+    el: '#app',
+    data: {
+      searchText: '',
+      sortBy: 'topic',
+      sortDir: 'asc',
+      lessons: [
+        { topic: 'Basketball Training', location: 'Dubai', price: 120, space: 8 },
+        { topic: 'Robotics Club', location: 'Dubai', price: 140, space: 7 },
+        { topic: 'Coding Club', location: 'Sharjah', price: 115, space: 8 }
+      ],
+      cart: [
+        { topic: 'Basketball Training', price: 120 },
+        { topic: 'Robotics Club', price: 140 }
+      ],
+      customer: {
+        name: '',
+        phone: ''
+      }
+    }
+  });
+  </script>
 </body>
 </html>
