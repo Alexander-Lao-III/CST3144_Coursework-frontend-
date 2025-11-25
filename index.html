@@ -1,69 +1,98 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Extra-Curricular Activities</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.min.js"></script>
+
   <style>
-    * { box-sizing: border-box; font-family: Arial, sans-serif; }
-    body { margin: 0; background: #f6f7fb; color: #111; }
-    .container { max-width: 900px; margin: 24px auto; padding: 16px; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    header h1 { margin: 0 0 12px; font-size: 24px; }
-    .controls { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; }
-    .controls input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-    .sort { display: flex; gap: 8px; align-items: center; background: #f4f6fb; border: 1px solid #e0e5f2; padding: 8px 10px; border-radius: 10px; }
-    .sort select { padding: 6px 8px; border: 1px solid #cbd2e0; border-radius: 8px; background: #fff; }
-    .order-toggle { display: inline-flex; gap: 6px; align-items: center; padding: 6px 10px; border: none; border-radius: 8px; background: #1e88e5; color: #fff; cursor: pointer; }
-    .lessons { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
-    .lesson { display: flex; justify-content: space-between; gap: 12px; border: 1px solid #e6e8f0; border-radius: 10px; padding: 12px; background: #fafbff; }
-    .lesson .title { font-weight: 600; margin-bottom: 4px; }
-    .lesson .meta { font-size: 13px; color: #555; }
-    .lesson-right button { padding: 8px 10px; border-radius: 8px; border: none; background: #1e88e5; color: #fff; cursor: pointer; }
-    .lesson-right button:disabled { background: #c3c7d1; cursor: not-allowed; }
-    .cart-panel { margin-top: 24px; padding: 16px; border: 1px solid #e6e8f0; border-radius: 10px; background: #fbfbff; }
-    .cart-panel h2 { margin-top: 0; }
-    .cart-panel ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
-    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #e6e8f0; border-radius: 8px; background: #fff; }
-    .cart-item button { border: none; border-radius: 6px; padding: 6px 10px; background: #e53935; color: #fff; cursor: pointer; }
-    .checkout-form { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
-    .checkout-form input { padding: 10px; border: 1px solid #cbd2e0; border-radius: 6px; }
-    .checkout-form button { padding: 10px; border-radius: 8px; border: none; background: #2e7d32; color: #fff; cursor: pointer; }
-    .checkout-form button:disabled { background: #c3c7d1; cursor: not-allowed; }
-    .field-error { color: #b00020; font-size: 12px; margin-top: 4px; }
-    .info { padding: 8px; background: #e8f4ff; border-radius: 4px; margin-top: 8px; }
-    footer { margin-top: 24px; text-align: center; color: #666; font-size: 14px; }
+*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{margin:0;background:#f6f7fb;color:#111}
+.container{max-width:900px;margin:24px auto;padding:16px;background:#fff;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+header h1{margin:0 0 12px 0;font-size:22px}
+.controls{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+.controls input{flex:1;padding:8px;border:1px solid #ccc;border-radius:4px}
+.sort{display:flex;gap:8px;align-items:center;background:#f4f6fb;border:1px solid #e0e5f2;padding:8px 10px;border-radius:10px}
+.sort select{padding:6px 8px;border:1px solid #cbd2e0;border-radius:8px;background:#fff}
+.order-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:0;border-radius:8px;background:#1e88e5;color:#fff;cursor:pointer}
+.order-toggle .arrow{font-weight:700}
+.order-toggle:hover{background:#1669c1}
+.lessons{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;align-items:stretch}
+.lesson{display:flex;flex-direction:column;gap:10px;padding:12px;border:1px solid #e6e8f0;border-radius:10px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.05);height:100%;min-height:170px}
+.lesson-left{display:flex;gap:10px;align-items:flex-start;flex:1}
+.lesson-left > div{min-width:0}
+.lesson-left .title{font-weight:600;margin:0 0 4px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lesson-left .meta{font-size:13px;color:#555;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lesson-icon{width:36px;height:36px;object-fit:contain;flex:0 0 36px;filter:grayscale(10%)}
+.lesson-right button{padding:8px 10px;border-radius:8px;border:0;background:#1e88e5;color:#fff;cursor:pointer;width:100%}
+.lesson-right button:hover{background:#1669c1}
+.lesson-right button[disabled]{background:#c3c7d1;cursor:default}
+.cart-panel h2{margin-top:0}
+.cart-panel ul{list-style:none;margin:8px 0 0 0;padding:0;display:grid;grid-template-columns:1fr;gap:8px}
+.cart-item{display:flex;align-items:center;justify-content:space-between;padding:10px;border:1px solid #e6e8f0;border-radius:8px;background:#fff}
+.cart-item .info{display:flex;align-items:center;gap:10px}
+.cart-item .title{font-weight:600}
+.cart-item button.remove{background:#e53935;color:#fff;border:0;border-radius:6px;padding:6px 10px;cursor:pointer}
+.cart-item button.remove:hover{background:#c62828}
+.cart-btn{padding:8px 10px;border-radius:4px;border:0;background:#2e7d32;color:#fff}
+.cart-panel{padding:12px;background:#fbfbff;border:1px solid #eef;margin-top:12px;border-radius:6px}
+.checkout-form{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.checkout-form .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.checkout-form label{display:block;font-size:13px;color:#444;margin-bottom:6px}
+.checkout-form input{width:100%;padding:10px 12px;border:1px solid #cbd2e0;border-radius:8px;background:#fff}
+.checkout-form input:focus{outline:none;border-color:#1e88e5;box-shadow:0 0 0 3px rgba(30,136,229,0.15)}
+.checkout-form button{padding:10px 12px;border-radius:8px;border:0;background:#1e88e5;color:#fff;cursor:pointer}
+.checkout-form button:hover{background:#1669c1}
+.checkout-form button[disabled]{background:#c3c7d1;cursor:default}
+.checkout-form .back-btn{background:#fff;color:#1e88e5;border:1px solid #cbd2e0}
+.checkout-form .back-btn:hover{background:#f4f6fb}
+.field-error{color:#b00020;font-size:13px}
+.info{padding:8px;background:#e8f4ff;border-radius:4px;margin:8px 0}
+.error{color:#b00020}
+footer{margin-top:12px;text-align:center;color:#666;font-size:13px}
+
+header{margin-bottom:8px}
+.lesson-right{margin-top:auto}
+.cart-item .info img{width:36px;height:36px;object-fit:contain}
   </style>
 </head>
 <body>
   <div id="app" class="container">
+
     <header>
       <h1>Extra-Curricular Activities</h1>
     </header>
 
-    <main>
-      <section class="controls">
-        <input type="text" v-model="searchText" @input="onSearchInput" placeholder="Search lessons">
-        <div class="sort">
-          <label for="sortBy">Sort</label>
-          <select id="sortBy" v-model="sortBy">
-            <option value="topic">Subject</option>
-            <option value="location">Location</option>
-            <option value="price">Price</option>
-            <option value="space">Spaces</option>
-          </select>
-          <button class="order-toggle" @click="sortDir = sortDir === 'asc' ? 'desc' : 'asc'">
-            <span class="arrow">{{ sortDir === 'asc' ? '↑' : '↓' }}</span>
-            <span class="text">{{ sortDir }}</span>
-          </button>
-        </div>
-        <button class="order-toggle" @click="toggleCart" :disabled="cart.length === 0 && !showCart">
-          {{ showCart ? 'Back to lessons' : ('Cart (' + cart.length + ')') }}
-        </button>
-      </section>
+    <section class="controls">
+      <input v-model.trim="searchText" @input="onSearchInput" placeholder="Search lessons">
 
-      <ul class="lessons" v-if="!showCart">
-        <li class="lesson" v-for="lesson in sortedLessons" :key="lesson._id">
+      <div class="sort" role="group" aria-label="sort controls">
+        <label for="sortBy">Sort</label>
+        <select id="sortBy" v-model="sortBy" @change="applySort">
+          <option value="topic">subject</option>
+          <option value="location">location</option>
+          <option value="price">price</option>
+          <option value="space">spaces</option>
+        </select>
+
+        <button class="order-toggle" @click="toggleOrder" :aria-pressed="sortDir === 'desc'">
+          <span class="arrow">{{ sortDir === 'asc' ? '↑' : '↓' }}</span>
+          <span class="text">{{ sortDir === 'asc' ? 'asc' : 'desc' }}</span>
+        </button>
+      </div>
+
+      <button @click="toggleCart" :disabled="cart.length === 0" class="cart-btn">
+        Cart ({{ cart.length }})
+      </button>
+    </section>
+
+    <main v-if="!showCart" aria-live="polite">
+      <ul class="lessons">
+        <li v-for="lesson in pagedAndSortedLessons" :key="lesson._id" class="lesson">
           <div class="lesson-left">
+            <img :src="iconFor(lesson)" alt="" class="lesson-icon">
             <div>
               <div class="title">Subject: {{ lesson.topic }}</div>
               <div class="meta">Location: {{ lesson.location }}</div>
@@ -71,146 +100,217 @@
               <div class="meta">Spaces: {{ lesson.space }}</div>
             </div>
           </div>
+
           <div class="lesson-right">
-            <button :disabled="lesson.space <= 0" @click="addToCart(lesson)">Add to cart</button>
+            <button @click="addToCart(lesson)" :disabled="lesson.space <= 0">
+              Add to cart
+            </button>
           </div>
         </li>
       </ul>
-
-      <aside class="cart-panel" v-else>
-        <h2>Shopping cart</h2>
-        <ul>
-          <li class="cart-item" v-for="(item, index) in cart" :key="item.instanceId">
-            <span>{{ item.topic }}</span>
-            <button @click="removeFromCart(index)">remove</button>
-          </li>
-        </ul>
-
-        <form class="checkout-form" @submit.prevent="submitOrder">
-          <div>
-            <input type="text" v-model.trim="customer.name" placeholder="Name" autocomplete="name">
-            <div v-if="nameError" class="field-error">{{ nameError }}</div>
-          </div>
-          <div>
-            <input type="tel" v-model.trim="customer.phone" placeholder="Phone" autocomplete="tel">
-            <div v-if="phoneError" class="field-error">{{ phoneError }}</div>
-          </div>
-          <button type="submit" :disabled="!canCheckout">checkout</button>
-        </form>
-        <div v-if="orderMessage" class="info">{{ orderMessage }}</div>
-      </aside>
     </main>
 
-    <footer>
-      <small>&copy; 2024 Extra-Curricular Activities</small>
-    </footer>
+    <aside v-if="showCart" class="cart-panel" aria-live="polite">
+      <h2>Shopping cart</h2>
+
+      <div v-if="cart.length === 0">cart is empty</div>
+
+      <ul>
+        <li v-for="(item, index) in cart" :key="item.instanceId" class="cart-item">
+          <div class="info">
+            <img :src="iconFor(item)" alt="">
+            <div>
+              <div class="title">{{ item.topic }}</div>
+              <div class="meta">{{ item.location }} · AED {{ item.price }}</div>
+            </div>
+          </div>
+
+          <button class="remove" @click="removeFromCart(index)">remove</button>
+        </li>
+      </ul>
+
+      <form @submit.prevent="submitOrder" class="checkout-form" novalidate>
+        <div class="form-grid">
+          <div>
+            <label for="name">Name</label>
+            <input id="name" v-model.trim="customer.name" autocomplete="name">
+            <div v-if="nameError" class="field-error">{{ nameError }}</div>
+          </div>
+
+          <div>
+            <label for="phone">Phone</label>
+            <input id="phone" v-model.trim="customer.phone" autocomplete="tel">
+            <div v-if="phoneError" class="field-error">{{ phoneError }}</div>
+          </div>
+        </div>
+
+        <button type="submit" :disabled="!canCheckout">checkout</button>
+        <button type="button" class="back-btn" @click="toggleCart">back to lessons</button>
+      </form>
+
+      <div v-if="orderMessage" class="info">{{ orderMessage }}</div>
+    </aside>
+
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.min.js"></script>
-  <script>
-  new Vue({
-    el: '#app',
-    data: {
-      searchText: '',
-      sortBy: 'topic',
-      sortDir: 'asc',
-      showCart: false,
-      orderMessage: '',
-      lessons: [
-        { _id: '1', topic: 'Basketball Training', location: 'Dubai', price: 120, space: 8 },
-        { _id: '2', topic: 'Robotics Club', location: 'Dubai', price: 140, space: 7 },
-        { _id: '3', topic: 'Coding Club', location: 'Sharjah', price: 115, space: 8 }
-      ],
-      cart: [],
-      customer: {
-        name: '',
-        phone: ''
-      }
+<script>
+new Vue({
+  el: '#app',
+  data: {
+    searchText: '',
+    sortBy: 'topic',
+    sortDir: 'asc',
+    showCart: false,
+    orderMessage: '',
+    customer: { name: '', phone: '' },
+    lessons: [
+      { _id: '1', topic: 'Basketball Training', location: 'Dubai', price: 120, space: 8 },
+      { _id: '2', topic: 'Football Academy', location: 'Abu Dhabi', price: 100, space: 10 },
+      { _id: '3', topic: 'Swimming Lessons', location: 'Sharjah', price: 110, space: 6 },
+      { _id: '4', topic: 'Music Band Practice', location: 'Dubai', price: 95, space: 12 },
+      { _id: '5', topic: 'Art & Crafts', location: 'Dubai', price: 80, space: 9 },
+      { _id: '6', topic: 'Robotics Club', location: 'Dubai', price: 140, space: 7 },
+      { _id: '7', topic: 'Chess Club', location: 'Remote', price: 60, space: 15 },
+      { _id: '8', topic: 'Drama & Theatre', location: 'Abu Dhabi', price: 90, space: 10 },
+      { _id: '9', topic: 'Photography Workshop', location: 'Dubai', price: 125, space: 6 },
+      { _id: '10', topic: 'Coding Club', location: 'Sharjah', price: 115, space: 8 }
+    ],
+    cart: []
+  },
+
+  computed: {
+    filteredLessons() {
+      const q = (this.searchText || '').toLowerCase();
+      if (!q) return this.lessons;
+      return this.lessons.filter(l =>
+        (l.topic || '').toLowerCase().includes(q) ||
+        (l.location || '').toLowerCase().includes(q) ||
+        String(l.price).includes(q) ||
+        String(l.space).includes(q)
+      );
     },
-    computed: {
-      filteredLessons() {
-        const query = (this.searchText || '').toLowerCase();
-        if (!query) return this.lessons;
-        return this.lessons.filter(lesson =>
-          lesson.topic.toLowerCase().includes(query) ||
-          lesson.location.toLowerCase().includes(query) ||
-          String(lesson.price).includes(query) ||
-          String(lesson.space).includes(query)
-        );
-      },
-      sortedLessons() {
-        const copy = this.filteredLessons.slice();
-        const key = this.sortBy.toLowerCase();
-        const dir = this.sortDir === 'asc' ? 1 : -1;
-        return copy.sort((a, b) => {
-          let av = a[key];
-          let bv = b[key];
-          const aNum = typeof av === 'number';
-          const bNum = typeof bv === 'number';
-          if (aNum && bNum) return (av - bv) * dir;
-          av = (av || '').toString().toLowerCase();
-          bv = (bv || '').toString().toLowerCase();
+
+    pagedAndSortedLessons() {
+      const arr = this.filteredLessons.slice();
+      const key = this.sortBy;
+      const dir = this.sortDir === 'asc' ? 1 : -1;
+
+      arr.sort((a, b) => {
+        let av = a[key];
+        let bv = b[key];
+
+        const aIsNum = typeof av === 'number';
+        const bIsNum = typeof bv === 'number';
+
+        if (aIsNum && bIsNum) {
           if (av < bv) return -1 * dir;
           if (av > bv) return 1 * dir;
           return 0;
-        });
-      },
-      nameError() {
-        if (!this.customer.name) return '';
-        return /^[A-Za-z ]+$/.test(this.customer.name) ? '' : 'letters only';
-      },
-      phoneError() {
-        if (!this.customer.phone) return '';
-        return /^[0-9]+$/.test(this.customer.phone) ? '' : 'numbers only';
-      },
-      canCheckout() {
-        return this.customer.name &&
-               this.customer.phone &&
-               !this.nameError &&
-               !this.phoneError &&
-               this.cart.length > 0;
-      }
-    },
-    methods: {
-      onSearchInput() {
-        this.orderMessage = '';
-      },
-      toggleCart() {
-        this.showCart = !this.showCart;
-        this.orderMessage = '';
-      },
-      addToCart(lesson) {
-        if (!lesson || lesson.space <= 0) return;
-        const instanceId = Date.now().toString(36) + Math.random().toString(36).slice(2,8);
-        this.cart.push({
-          instanceId,
-          _id: lesson._id,
-          topic: lesson.topic,
-          price: lesson.price
-        });
-        lesson.space = Math.max(0, lesson.space - 1);
-        this.orderMessage = '';
-      },
-      removeFromCart(index) {
-        const item = this.cart[index];
-        if (!item) return;
-        const lesson = this.lessons.find(l => l._id === item._id);
-        if (lesson) lesson.space = Number(lesson.space) + 1;
-        this.cart.splice(index, 1);
-        if (this.cart.length === 0 && this.showCart) {
-          this.showCart = false;
         }
-        this.orderMessage = '';
-      },
-      submitOrder() {
-        if (!this.canCheckout) return;
-        this.orderMessage = 'order submitted successfully';
-        this.cart = [];
-        this.customer.name = '';
-        this.customer.phone = '';
-      }
+
+        av = (av || '').toString().toLowerCase();
+        bv = (bv || '').toString().toLowerCase();
+        if (av < bv) return -1 * dir;
+        if (av > bv) return 1 * dir;
+        return 0;
+      });
+
+      return arr;
+    },
+
+    nameError() {
+      if (!this.customer.name) return '';
+      return /^[A-Za-z ]+$/.test(this.customer.name) ? '' : 'letters only';
+    },
+
+    phoneError() {
+      if (!this.customer.phone) return '';
+      return /^[0-9]+$/.test(this.customer.phone) ? '' : 'numbers only';
+    },
+
+    canCheckout() {
+      return this.customer.name &&
+             this.customer.phone &&
+             !this.nameError &&
+             !this.phoneError &&
+             this.cart.length > 0;
     }
-  });
-  </script>
+  },
+
+  methods: {
+    onSearchInput() {
+      this.orderMessage = '';
+    },
+
+    applySort() {
+    },
+
+    toggleOrder() {
+      this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+    },
+
+    iconFor(lesson) {
+      const t = (lesson.topic || '').toLowerCase();
+      if (t.includes('basketball')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3c0.png';
+      if (t.includes('football') || t.includes('soccer')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/26bd.png';
+      if (t.includes('swim')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3ca.png';
+      if (t.includes('music') || t.includes('band')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3b5.png';
+      if (t.includes('art') || t.includes('craft')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3a8.png';
+      if (t.includes('robot')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f916.png';
+      if (t.includes('chess')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/265f.png';
+      if (t.includes('drama') || t.includes('theatre')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3ad.png';
+      if (t.includes('photo')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4f7.png';
+      if (t.includes('coding') || t.includes('program')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4bb.png';
+      return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4da.png';
+    },
+
+    addToCart(lesson) {
+      if (!lesson || lesson.space <= 0) return;
+
+      const instanceId = Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+
+      this.cart.push({
+        instanceId,
+        _id: lesson._id,
+        topic: lesson.topic,
+        location: lesson.location,
+        price: lesson.price
+      });
+
+      lesson.space = Math.max(0, lesson.space - 1);
+
+      this.orderMessage = '';
+    },
+
+    removeFromCart(index) {
+      const item = this.cart[index];
+      if (!item) return;
+
+      const lesson = this.lessons.find(l => l._id === item._id);
+      if (lesson) lesson.space = Number(lesson.space) + 1;
+
+      this.cart.splice(index, 1);
+
+      this.orderMessage = '';
+    },
+
+    toggleCart() {
+      this.showCart = !this.showCart;
+      this.orderMessage = '';
+    },
+
+    submitOrder() {
+      if (!this.canCheckout) return;
+
+      this.orderMessage = 'order submitted successfully';
+
+      this.cart = [];
+      this.customer.name = '';
+      this.customer.phone = '';
+
+    }
+  }
+});
+</script>
 </body>
 </html>
