@@ -39,47 +39,34 @@
 
     <main>
       <section class="controls">
-        <input type="text" placeholder="Search lessons">
+        <input type="text" v-model="searchText" placeholder="Search lessons">
         <div class="sort">
           <label for="sortBy">Sort</label>
-          <select id="sortBy">
+          <select id="sortBy" v-model="sortBy">
             <option>Subject</option>
             <option>Location</option>
             <option>Price</option>
             <option>Spaces</option>
           </select>
-          <button class="order-toggle">
-            <span class="arrow">↑</span>
-            <span class="text">asc</span>
+          <button class="order-toggle" @click="sortDir = sortDir === 'asc' ? 'desc' : 'asc'">
+            <span class="arrow">{{ sortDir === 'asc' ? '↑' : '↓' }}</span>
+            <span class="text">{{ sortDir }}</span>
           </button>
         </div>
       </section>
 
       <ul class="lessons">
-        <li class="lesson">
+        <li class="lesson" v-for="lesson in sortedLessons" :key="lesson.topic">
           <div class="lesson-left">
             <div>
-              <div class="title">Subject: Basketball Training</div>
-              <div class="meta">Location: Dubai</div>
-              <div class="meta">Price: AED 120</div>
-              <div class="meta">Spaces: 8</div>
+              <div class="title">Subject: {{ lesson.topic }}</div>
+              <div class="meta">Location: {{ lesson.location }}</div>
+              <div class="meta">Price: AED {{ lesson.price }}</div>
+              <div class="meta">Spaces: {{ lesson.space }}</div>
             </div>
           </div>
           <div class="lesson-right">
-            <button>Add to cart</button>
-          </div>
-        </li>
-        <li class="lesson">
-          <div class="lesson-left">
-            <div>
-              <div class="title">Subject: Robotics Club</div>
-              <div class="meta">Location: Dubai</div>
-              <div class="meta">Price: AED 140</div>
-              <div class="meta">Spaces: 7</div>
-            </div>
-          </div>
-          <div class="lesson-right">
-            <button>Add to cart</button>
+            <button :disabled="lesson.space <= 0">Add to cart</button>
           </div>
         </li>
       </ul>
@@ -87,19 +74,15 @@
       <aside class="cart-panel">
         <h2>Shopping cart</h2>
         <ul>
-          <li class="cart-item">
-            <span>Basketball Training</span>
-            <button>remove</button>
-          </li>
-          <li class="cart-item">
-            <span>Robotics Club</span>
+          <li class="cart-item" v-for="item in cart" :key="item.topic + item.price">
+            <span>{{ item.topic }}</span>
             <button>remove</button>
           </li>
         </ul>
 
         <form class="checkout-form">
-          <input type="text" placeholder="Name">
-          <input type="tel" placeholder="Phone">
+          <input type="text" v-model="customer.name" placeholder="Name">
+          <input type="tel" v-model="customer.phone" placeholder="Phone">
           <button type="button">checkout</button>
         </form>
       </aside>
@@ -130,6 +113,35 @@
       customer: {
         name: '',
         phone: ''
+      }
+    },
+    computed: {
+      filteredLessons() {
+        const query = (this.searchText || '').toLowerCase();
+        if (!query) return this.lessons;
+        return this.lessons.filter(lesson =>
+          lesson.topic.toLowerCase().includes(query) ||
+          lesson.location.toLowerCase().includes(query) ||
+          String(lesson.price).includes(query) ||
+          String(lesson.space).includes(query)
+        );
+      },
+      sortedLessons() {
+        const copy = this.filteredLessons.slice();
+        const key = this.sortBy.toLowerCase();
+        const dir = this.sortDir === 'asc' ? 1 : -1;
+        return copy.sort((a, b) => {
+          let av = a[key];
+          let bv = b[key];
+          const aNum = typeof av === 'number';
+          const bNum = typeof bv === 'number';
+          if (aNum && bNum) return (av - bv) * dir;
+          av = (av || '').toString().toLowerCase();
+          bv = (bv || '').toString().toLowerCase();
+          if (av < bv) return -1 * dir;
+          if (av > bv) return 1 * dir;
+          return 0;
+        });
       }
     }
   });
