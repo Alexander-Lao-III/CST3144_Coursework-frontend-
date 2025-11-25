@@ -9,6 +9,12 @@
     body { margin: 0; background: #f6f7fb; color: #111; }
     .container { max-width: 900px; margin: 24px auto; padding: 16px; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
     header h1 { margin: 0 0 12px; font-size: 24px; }
+    .lessons { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+    .lesson { display: flex; justify-content: space-between; gap: 12px; border: 1px solid #e6e8f0; border-radius: 10px; padding: 12px; background: #fafbff; }
+    .lesson .title { font-weight: 600; margin-bottom: 4px; }
+    .lesson .meta { font-size: 13px; color: #555; }
+    .lesson-right button { padding: 8px 10px; border-radius: 8px; border: none; background: #1e88e5; color: #fff; cursor: pointer; }
+    .lesson-right button:disabled { background: #c3c7d1; cursor: not-allowed; }
     footer { margin-top: 24px; text-align: center; color: #666; font-size: 14px; }
   </style>
 </head>
@@ -19,7 +25,34 @@
     </header>
 
     <main>
-      <p></p>
+      <ul class="lessons">
+        <li class="lesson">
+          <div class="lesson-left">
+            <div>
+              <div class="title">Subject: Basketball Training</div>
+              <div class="meta">Location: Dubai</div>
+              <div class="meta">Price: AED 120</div>
+              <div class="meta">Spaces: 8</div>
+            </div>
+          </div>
+          <div class="lesson-right">
+            <button>Add to cart</button>
+          </div>
+        </li>
+        <li class="lesson">
+          <div class="lesson-left">
+            <div>
+              <div class="title">Subject: Robotics Club</div>
+              <div class="meta">Location: Dubai</div>
+              <div class="meta">Price: AED 140</div>
+              <div class="meta">Spaces: 7</div>
+            </div>
+          </div>
+          <div class="lesson-right">
+            <button>Add to cart</button>
+          </div>
+        </li>
+      </ul>
     </main>
 
     <footer>
