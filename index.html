@@ -88,6 +88,9 @@ header{margin-bottom:8px}
       </button>
     </section>
 
+    <div v-if="loading">loading...</div>
+    <div v-if="loadError">{{ loadError }}</div>
+
     <main v-if="!showCart" aria-live="polite">
       <ul class="lessons">
         <li v-for="lesson in pagedAndSortedLessons" :key="lesson._id" class="lesson">
@@ -162,33 +165,20 @@ new Vue({
     sortDir: 'asc',
     showCart: false,
     orderMessage: '',
+    loading: true,
+    loadError: '',
     customer: { name: '', phone: '' },
     lessons: [],
     cart: []
   },
 
   created() {
-    fetch('https://YOUR-BACKEND-URL/lessons')
-      .then(r => r.json())
-      .then(data => {
-        this.lessons = data;
-      });
+    this.fetchLessons();
   },
 
   computed: {
-    filteredLessons() {
-      const q = (this.searchText || '').toLowerCase();
-      if (!q) return this.lessons;
-      return this.lessons.filter(l =>
-        (l.topic || '').toLowerCase().includes(q) ||
-        (l.location || '').toLowerCase().includes(q) ||
-        String(l.price).includes(q) ||
-        String(l.space).includes(q)
-      );
-    },
-
     pagedAndSortedLessons() {
-      const arr = this.filteredLessons.slice();
+      const arr = this.lessons.slice();
       const key = this.sortBy;
       const dir = this.sortDir === 'asc' ? 1 : -1;
 
@@ -235,8 +225,26 @@ new Vue({
   },
 
   methods: {
+    fetchLessons(query = '') {
+      this.loading = true;
+      this.loadError = '';
+      const base = query ? `https://YOUR-BACKEND-URL/search?q=${encodeURIComponent(query)}` : 'https://YOUR-BACKEND-URL/lessons';
+      fetch(base)
+        .then(r => r.json())
+        .then(data => {
+          this.lessons = Array.isArray(data) ? data : [];
+        })
+        .catch(() => {
+          this.loadError = 'server unreachable';
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+
     onSearchInput() {
       this.orderMessage = '';
+      this.fetchLessons(this.searchText || '');
     },
 
     applySort() {
@@ -247,18 +255,7 @@ new Vue({
     },
 
     iconFor(lesson) {
-      const t = (lesson.topic || '').toLowerCase();
-      if (t.includes('basketball')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3c0.png';
-      if (t.includes('football') || t.includes('soccer')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/26bd.png';
-      if (t.includes('swim')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3ca.png';
-      if (t.includes('music') || t.includes('band')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3b5.png';
-      if (t.includes('art') || t.includes('craft')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3a8.png';
-      if (t.includes('robot')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f916.png';
-      if (t.includes('chess')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/265f.png';
-      if (t.includes('drama') || t.includes('theatre')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3ad.png';
-      if (t.includes('photo')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4f7.png';
-      if (t.includes('coding') || t.includes('program')) return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4bb.png';
-      return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4da.png';
+      return `https://YOUR-BACKEND-URL/images/${lesson.icon}`;
     },
 
     addToCart(lesson) {
