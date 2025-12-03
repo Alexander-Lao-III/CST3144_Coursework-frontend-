@@ -8,54 +8,66 @@
   <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.min.js"></script>
 
   <style>
-/* your exact CSS kept unchanged */
+
 *{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
 body{margin:0;background:#f6f7fb;color:#111}
 .container{max-width:900px;margin:24px auto;padding:16px;background:#fff;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+
+
 header h1{margin:0 0 12px 0;font-size:22px}
+
+
 .controls{display:flex;gap:12px;align-items:center;margin-bottom:12px}
 .controls input{flex:1;padding:8px;border:1px solid #ccc;border-radius:4px}
+
+
 .sort{display:flex;gap:8px;align-items:center;background:#f4f6fb;border:1px solid #e0e5f2;padding:8px 10px;border-radius:10px}
 .sort select{padding:6px 8px;border:1px solid #cbd2e0;border-radius:8px;background:#fff}
 .order-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:0;border-radius:8px;background:#1e88e5;color:#fff;cursor:pointer}
-.order-toggle .arrow{font-weight:700}
 .order-toggle:hover{background:#1669c1}
-.lessons{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;align-items:stretch}
-.lesson{display:flex;flex-direction:column;gap:10px;padding:12px;border:1px solid #e6e8f0;border-radius:10px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.05);height:100%;min-height:170px}
-.lesson-left{display:flex;gap:10px;align-items:flex-start;flex:1}
+
+
+.lessons{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.lesson{display:flex;flex-direction:column;gap:10px;padding:12px;border:1px solid #e6e8f0;border-radius:10px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.05);min-height:170px}
+
+
+.lesson-left{display:flex;gap:10px}
 .lesson-left > div{min-width:0}
+.lesson-icon{width:36px;height:36px;object-fit:contain}
+
+
 .lesson-left .title{font-weight:600;margin:0 0 4px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lesson-left .meta{font-size:13px;color:#555;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lesson-icon{width:36px;height:36px;object-fit:contain;flex:0 0 36px;filter:grayscale(10%)}
-.lesson-right button{padding:8px 10px;border-radius:8px;border:0;background:#1e88e5;color:#fff;cursor:pointer;width:100%}
+.lesson-left .meta{font-size:13px;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+
+.lesson-right button{padding:8px 10px;border-radius:8px;border:0;background:#1e88e5;color:#fff;cursor:pointer}
 .lesson-right button:hover{background:#1669c1}
-.lesson-right button[disabled]{background:#c3c7d1;cursor:default}
-.cart-panel h2{margin-top:0}
-.cart-panel ul{list-style:none;margin:8px 0 0 0;padding:0;display:grid;grid-template-columns:1fr;gap:8px}
+.lesson-right button[disabled]{background:#c3c7d1}
+
+
+.cart-panel{padding:12px;background:#fbfbff;border:1px solid #eef;margin-top:12px;border-radius:6px}
+.cart-panel ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:8px}
+
+
 .cart-item{display:flex;align-items:center;justify-content:space-between;padding:10px;border:1px solid #e6e8f0;border-radius:8px;background:#fff}
-.cart-item .info{display:flex;align-items:center;gap:10px}
-.cart-item .title{font-weight:600}
+.cart-item .info{display:flex;gap:10px}
 .cart-item button.remove{background:#e53935;color:#fff;border:0;border-radius:6px;padding:6px 10px;cursor:pointer}
 .cart-item button.remove:hover{background:#c62828}
-.cart-btn{padding:8px 10px;border-radius:4px;border:0;background:#2e7d32;color:#fff}
-.cart-panel{padding:12px;background:#fbfbff;border:1px solid #eef;margin-top:12px;border-radius:6px}
+
+
 .checkout-form{display:flex;flex-direction:column;gap:8px;margin-top:12px}
 .checkout-form .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.checkout-form label{display:block;font-size:13px;color:#444;margin-bottom:6px}
-.checkout-form input{width:100%;padding:10px 12px;border:1px solid #cbd2e0;border-radius:8px;background:#fff}
+.checkout-form label{font-size:13px;color:#444;margin-bottom:6px}
+.checkout-form input{padding:10px 12px;border:1px solid #cbd2e0;border-radius:8px}
 .checkout-form input:focus{outline:none;border-color:#1e88e5;box-shadow:0 0 0 3px rgba(30,136,229,0.15)}
 .checkout-form button{padding:10px 12px;border-radius:8px;border:0;background:#1e88e5;color:#fff;cursor:pointer}
 .checkout-form button:hover{background:#1669c1}
-.checkout-form button[disabled]{background:#c3c7d1;cursor:default}
+.checkout-form button[disabled]{background:#c3c7d1}
 .checkout-form .back-btn{background:#fff;color:#1e88e5;border:1px solid #cbd2e0}
-.checkout-form .back-btn:hover{background:#f4f6fb}
+
 .field-error{color:#b00020;font-size:13px}
 .info{padding:8px;background:#e8f4ff;border-radius:4px;margin:8px 0}
-.error{color:#b00020}
-footer{margin-top:12px;text-align:center;color:#666;font-size:13px}
-header{margin-bottom:8px}
-.lesson-right{margin-top:auto}
-.cart-item .info img{width:36px;height:36px;object-fit:contain}
+footer{text-align:center;color:#666;font-size:13px;margin-top:12px}
   </style>
 </head>
 
@@ -66,6 +78,7 @@ header{margin-bottom:8px}
       <h1>Extra-Curricular Activities</h1>
     </header>
 
+    <!-- search, sort, cart button -->
     <section class="controls">
       <input v-model.trim="searchText" @input="onSearchInput" placeholder="Search lessons">
 
@@ -89,9 +102,11 @@ header{margin-bottom:8px}
       </button>
     </section>
 
+    <!-- load states -->
     <div v-if="loading">loading...</div>
     <div v-if="loadError">{{ loadError }}</div>
 
+    <!-- lessons list -->
     <main v-if="!showCart">
       <ul class="lessons">
         <li v-for="lesson in pagedAndSortedLessons" :key="lesson._id" class="lesson">
@@ -106,12 +121,15 @@ header{margin-bottom:8px}
           </div>
 
           <div class="lesson-right">
-            <button @click="addToCart(lesson)" :disabled="lesson.space <= 0">Add to cart</button>
+            <button @click="addToCart(lesson)" :disabled="lesson.space <= 0">
+              Add to cart
+            </button>
           </div>
         </li>
       </ul>
     </main>
 
+    <!-- cart panel -->
     <aside v-if="showCart" class="cart-panel">
       <h2>Shopping cart</h2>
 
@@ -129,6 +147,7 @@ header{margin-bottom:8px}
         </li>
       </ul>
 
+      <!-- checkout -->
       <form @submit.prevent="submitOrder" class="checkout-form">
         <div class="form-grid">
           <div>
@@ -156,6 +175,7 @@ header{margin-bottom:8px}
 <script>
 new Vue({
   el: '#app',
+
   data: {
     searchText: '',
     sortBy: 'topic',
@@ -170,10 +190,11 @@ new Vue({
   },
 
   created() {
-    this.fetchLessons();
+    this.fetchLessons(); // load lessons
   },
 
   computed: {
+    // sorted lessons
     pagedAndSortedLessons() {
       const arr = this.lessons.slice();
       const key = this.sortBy;
@@ -182,9 +203,17 @@ new Vue({
       arr.sort((a, b) => {
         let av = a[key];
         let bv = b[key];
-        if (typeof av === 'number' && typeof bv === 'number') {
+
+        if (av === undefined) av = '';
+        if (bv === undefined) bv = '';
+
+        const aNum = typeof av === 'number';
+        const bNum = typeof bv === 'number';
+
+        if (aNum && bNum) {
           return av < bv ? -1 * dir : av > bv ? 1 * dir : 0;
         }
+
         av = av.toString().toLowerCase();
         bv = bv.toString().toLowerCase();
         return av < bv ? -1 * dir : av > bv ? 1 * dir : 0;
@@ -193,16 +222,19 @@ new Vue({
       return arr;
     },
 
+    // name error
     nameError() {
       if (!this.customer.name) return '';
       return /^[A-Za-z ]+$/.test(this.customer.name) ? '' : 'letters only';
     },
 
+    // phone error
     phoneError() {
       if (!this.customer.phone) return '';
       return /^[0-9]+$/.test(this.customer.phone) ? '' : 'numbers only';
     },
 
+    // checkout allowed
     canCheckout() {
       return this.customer.name &&
              this.customer.phone &&
@@ -213,11 +245,12 @@ new Vue({
   },
 
   methods: {
+    // load lessons or search
     fetchLessons(query = '') {
       this.loading = true;
       const url = query
-        ? `http://localhost:3000/search?q=${encodeURIComponent(query)}`
-        : `http://localhost:3000/lessons`;
+        ? `https://extracurricular-activities.onrender.com/search?q=${encodeURIComponent(query)}`
+        : `https://extracurricular-activities.onrender.com/lessons`;
 
       fetch(url)
         .then(r => r.json())
@@ -232,18 +265,22 @@ new Vue({
         });
     },
 
+    // input search
     onSearchInput() {
       this.fetchLessons(this.searchText || '');
     },
 
+    // switch sort direction
     toggleOrder() {
       this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
     },
 
+    // icon path
     iconFor(lesson) {
-      return `http://localhost:3000/images/${lesson.icon}`;
+      return `https://extracurricular-activities.onrender.com/images/${lesson.icon}`;
     },
 
+    // add to cart
     addToCart(lesson) {
       if (!lesson || lesson.space <= 0) return;
 
@@ -262,6 +299,7 @@ new Vue({
       this.orderMessage = '';
     },
 
+    // remove item
     removeFromCart(index) {
       const item = this.cart[index];
       const lesson = this.lessons.find(l => l._id === item._id);
@@ -270,10 +308,12 @@ new Vue({
       this.orderMessage = '';
     },
 
+    // show/hide cart
     toggleCart() {
       this.showCart = !this.showCart;
     },
 
+    // submit order
     submitOrder() {
       if (!this.canCheckout) return;
 
@@ -283,15 +323,16 @@ new Vue({
         lessons: this.cart.map(i => i._id)
       };
 
-      fetch('http://localhost:3000/order', {
+      fetch('https://extracurricular-activities.onrender.com/order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(order)
       }).then(() => {
+        // update spaces in db
         this.cart.forEach(item => {
           const lesson = this.lessons.find(l => l._id === item._id);
           if (lesson) {
-            fetch(`http://localhost:3000/lesson/${lesson._id}`, {
+            fetch(`https://extracurricular-activities.onrender.com/lesson/${lesson._id}`, {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ space: lesson.space })
@@ -299,6 +340,7 @@ new Vue({
           }
         });
 
+        // reset
         this.orderMessage = 'order submitted successfully';
         this.cart = [];
         this.customer.name = '';
